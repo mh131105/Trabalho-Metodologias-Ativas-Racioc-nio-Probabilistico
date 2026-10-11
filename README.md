@@ -8,5 +8,5 @@
 
 ## Documento consolidado
 
-- [PDF com a resolução completa](output/pdf/resolucao-questao-1.pdf)
+- [PDF com a resolução completa](resolucao-questao-1.pdf)
 - [Fonte LaTeX do PDF](resolucao-questao-1.tex)
