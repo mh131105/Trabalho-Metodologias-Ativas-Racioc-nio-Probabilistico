@@ -1,8 +1,4 @@
-# Inteligência Artificial — Questão 1
-
-Resolução dos cinco itens da atividade de raciocínio probabilístico sobre o diagnóstico de um farol de bicicleta movido a dínamo. O desenvolvimento utiliza raciocínio causal, tabelas de probabilidades, d-separação e a lei da probabilidade total, com os cálculos apresentados por escrito.
-
-## Resoluções em Markdown
+## Resoluções
 
 - [Item (a): rede bayesiana causal](questao-1/item-a.md)
 - [Item (b): tabelas de probabilidades](questao-1/item-b.md)
