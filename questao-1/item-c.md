@@ -1,8 +1,6 @@
 # Questão 1 — Item (c): valores plausíveis
 
-**Pedido:** escolher livremente probabilidades plausíveis para as tabelas faltantes.
-
-Os números abaixo são **hipóteses ilustrativas**, não medições. A rede adotada é $Str\to R\leftarrow Flw$, $R\to V$, $V\to Li$, $B\to Li$ e $K\to Li$, com os nós de origem conjuntamente independentes. A CPT de $Li$ é preservada conforme o enunciado.
+A rede adotada é $Str\to R\leftarrow Flw$, $R\to V$, $V\to Li$, $B\to Li$ e $K\to Li$, com os nós de origem conjuntamente independentes. A CPT de $Li$ é preservada conforme o enunciado.
 
 ## Distribuições a priori
 
