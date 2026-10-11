@@ -6,7 +6,7 @@
 \usepackage{geometry}
 \geometry{left=2.2cm,right=2.2cm,top=2.1cm,bottom=2.2cm}
 \usepackage{amsmath,amssymb}
-\usepackage{booktabs,array}
+\usepackage{booktabs,array,longtable,calc}
 \usepackage{xcolor}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning}
@@ -31,62 +31,94 @@
 \newcommand{\itemtitle}[2]{\section*{\textcolor{accent}{Item (#1) --- #2}}}
 \newcommand{\subtitulo}[1]{\par\medskip\textbf{\textcolor{accent}{#1}}\par}
 
-\begin{document}
+\setcounter{secnumdepth}{0}
 
+\begin{document}
 {\LARGE\bfseries\textcolor{accent}{Raciocínio probabilístico}}\\[4pt]
 {\large Resolução da questão 1: diagnóstico de um farol a dínamo}
 
 \textbf{Disciplina:} Inteligência Artificial \hfill \textbf{2\textsuperscript{o} Trabalho}\par
 \textbf{Professor:} Edjard Mota \hfill \textbf{Data do enunciado:} 11/10/2026
 
-\itemtitle{a}{Rede bayesiana causal}
-\textbf{Pedido:} desenhar a rede de causalidade entre $Str$, $Flw$, $R$, $V$, $B$, $K$ e $Li$.
+\itemtitle{a}{Rede bayesiana causal}\label{item-a}
 
-\begin{center}
-\small
-\begin{tabular}{lll}
-\toprule
-\textbf{Variável} & \textbf{Significado} & \textbf{Valores}\\
-\midrule
-$Str$ & Condição da rua & \texttt{dry}, \texttt{wet}, \snow\\
-$Flw$ & Volante do dínamo desgastado & $t/f$\\
-$R$ & Dínamo deslizando & $t/f$\\
-$V$ & Dínamo apresenta tensão & $t/f$\\
-$B$ & Lâmpada em boas condições & $t/f$\\
-$K$ & Cabo em boas condições & $t/f$\\
-$Li$ & Luz ligada & $t/f$\\
-\bottomrule
-\end{tabular}
-\end{center}
-Aqui, $t$ significa verdadeiro e $f$, falso. A rua e o desgaste afetam o deslizamento; o deslizamento afeta a tensão; tensão, lâmpada e cabo afetam a luz.
+\subtitulo{Variáveis}\label{variuxe1veis}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Variável & Significado & Valores \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(Str\) & Condição da rua & \texttt{dry}, \texttt{wet}, \texttt{snow\_covered} \\
+\(Flw\) & Volante do dínamo desgastado & \(t\), \(f\) \\
+\(R\) & Dínamo deslizando & \(t\), \(f\) \\
+\(V\) & Dínamo apresenta tensão & \(t\), \(f\) \\
+\(B\) & Lâmpada em boas condições & \(t\), \(f\) \\
+\(K\) & Cabo em boas condições & \(t\), \(f\) \\
+\(Li\) & Luz ligada & \(t\), \(f\) \\
+\end{longtable}
+}
+
+Em todas as tabelas, \(t\) significa verdadeiro e \(f\), falso.
+
+\subtitulo{Construção da rede}\label{construuxe7uxe3o-da-rede}
+
+A condição da rua e o desgaste do volante afetam a aderência do dínamo. O deslizamento afeta a geração de tensão. A luz depende da tensão, da lâmpada e do cabo. Assim, adotamos a seguinte rede:
 
 \begin{center}
 \begin{tikzpicture}[
-  causal/.style={-{Stealth[length=2.5mm]},thick,draw=accent},
-  var/.style={draw=accent,rounded corners=3pt,fill=soft,minimum width=19mm,
-    minimum height=9mm,font=\bfseries},
-  every node/.style={align=center}]
-  \node[var] (str) at (-2.2,3) {$Str$\\{\scriptsize $P(Str)$}};
-  \node[var] (flw) at (2.2,3) {$Flw$\\{\scriptsize $P(Flw)$}};
-  \node[var] (r) at (0,1.85) {$R$\\{\scriptsize $P(R\mid Str,Flw)$}};
-  \node[var] (v) at (0,0.65) {$V$\\{\scriptsize $P(V\mid R)$}};
-  \node[var] (b) at (-3,0.65) {$B$\\{\scriptsize $P(B)$}};
-  \node[var] (k) at (3,0.65) {$K$\\{\scriptsize $P(K)$}};
-  \node[var] (li) at (0,-0.65) {$Li$\\{\scriptsize $P(Li\mid V,B,K)$}};
-  \draw[causal] (str)--(r);
-  \draw[causal] (flw)--(r);
-  \draw[causal] (r)--(v);
-  \draw[causal] (v)--(li);
-  \draw[causal] (b)--(li);
-  \draw[causal] (k)--(li);
+causal/.style={-{Stealth[length=2.5mm]},thick,draw=accent},
+var/.style={draw=accent,rounded corners=3pt,fill=soft,minimum width=23mm,minimum height=9mm},
+every node/.style={align=center}]
+\node[var] (str) at (-2.2,3) {$Str$\\{\scriptsize condição da rua}};
+\node[var] (flw) at (2.2,3) {$Flw$\\{\scriptsize volante desgastado}};
+\node[var] (r) at (0,1.85) {$R$\\{\scriptsize dínamo deslizando}};
+\node[var] (v) at (0,0.65) {$V$\\{\scriptsize presença de tensão}};
+\node[var] (b) at (-3.2,0.65) {$B$\\{\scriptsize lâmpada ok}};
+\node[var] (k) at (3.2,0.65) {$K$\\{\scriptsize cabo ok}};
+\node[var] (li) at (0,-0.65) {$Li$\\{\scriptsize luz ligada}};
+\draw[causal] (str)--(r);
+\draw[causal] (flw)--(r);
+\draw[causal] (r)--(v);
+\draw[causal] (v)--(li);
+\draw[causal] (b)--(li);
+\draw[causal] (k)--(li);
 \end{tikzpicture}
 \end{center}
 
-A CPT fornecida para $Li$ tem pais $V$, $B$ e $K$. As identidades sobre $V$ são compatíveis com $R$ como seu único pai, e $P(Li\mid V,R)=P(Li\mid V)$ é compatível com a mediação de $R$ por $V$.
+\clearpage
+O conjunto de arestas é
 
-\textbf{Hipótese explícita.} Adotamos essa interpretação causal e a independência conjunta dos nós de origem $Str$, $Flw$, $B$, $K$. Independência aos pares, isoladamente, não implica independência conjunta nem determina uma rede única.
+\[
+E=\{Str\to R,\ Flw\to R,\ R\to V,\ V\to Li,\ B\to Li,\ K\to Li\}.
+\]
 
-A fatoração da rede escolhida é
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Nó & Pais \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(Str\), \(Flw\), \(B\), \(K\) & Nenhum \\
+\(R\) & \(Str\), \(Flw\) \\
+\(V\) & \(R\) \\
+\(Li\) & \(V\), \(B\), \(K\) \\
+\end{longtable}
+}
+
+As condições \(P(V\mid R,Str)=P(V\mid R)\) e \(P(V\mid R,Flw)=P(V\mid R)\) são compatíveis com \(R\) como único pai de \(V\). Conhecido o deslizamento, rua e desgaste não acrescentam informação sobre a tensão no modelo. A condição \(P(Li\mid V,R)=P(Li\mid V)\) é compatível com o efeito de \(R\) sobre a luz sendo intermediado por \(V\). A tabela de \(Li\) fornecida no enunciado utiliza justamente \(V\), \(B\) e \(K\) como pais.
+
+\subtitulo{Hipótese de modelagem e fatoração}\label{hipuxf3tese-de-modelagem-e-fatorauxe7uxe3o}
+
+Adotei a interpretação causal descrita e a hipótese usual de \textbf{independência conjunta} dos nós de origem \(Str\), \(Flw\), \(B\) e \(K\). Essa hipótese é compatível com a independência aos pares do enunciado, mas é mais forte: independência aos pares, sozinha, não implica independência conjunta nem determina uma única rede.
+
+A distribuição conjunta da rede escolhida se decompõe em
+
 \[
 \begin{aligned}
 P(Str,Flw,R,V,B,K,Li)
@@ -95,267 +127,353 @@ P(Str,Flw,R,V,B,K,Li)
 \end{aligned}
 \]
 
-\newpage
-\itemtitle{b}{Tabelas de probabilidades}
-\textbf{Pedido:} associar a cada nó sua tabela de probabilidades e completar as tabelas faltantes.
+Sem observar a luz, os caminhos que ligam \(B\) ou \(K\) à cadeia \(Str,Flw,R,V\) passam pelo colisor \(Li\) e ficam bloqueados. Isso explica as independências marginais \((R,B)\), \((R,K)\), \((V,B)\) e \((V,K)\).
 
-Cada nó recebe uma distribuição condicionada aos seus pais. Para os nós sem pais, trata-se de uma distribuição a priori. Há sete tabelas: seis faltantes e a CPT de $Li$, já fornecida.
+\textbf{Resposta:} a rede tem sete nós e as seis arestas indicadas no diagrama; não há ciclos dirigidos.
 
-As distribuições estão identificadas nos nós do diagrama do item (a): $P(Str)$, $P(Flw)$, $P(B)$, $P(K)$, $P(R\mid Str,Flw)$, $P(V\mid R)$ e $P(Li\mid V,B,K)$. As tabelas seguintes detalham seus parâmetros.
+\clearpage
+\itemtitle{b}{Tabelas de probabilidades}\label{item-b}
 
-\subtitulo{1. Distribuição de $Str$}
-\begin{center}
-\begin{tabular}{lc}
-\toprule
-$Str$ & $P(Str)$\\
-\midrule
-\texttt{dry} & $p_d$\\
-\texttt{wet} & $p_w$\\
-\snow & $p_s$\\
-\bottomrule
-\end{tabular}
-\end{center}
-Os parâmetros são não negativos e satisfazem $p_d+p_w+p_s=1$.
-
-\subtitulo{2--4. Distribuições de $Flw$, $B$ e $K$}
-Defina $\alpha=P(Flw=t)$, $\beta=P(B=t)$ e $\gamma=P(K=t)$.
-\begin{center}
-\begin{tabular}{lcc}
-\toprule
-\textbf{Nó} & $P(t)$ & $P(f)$\\
-\midrule
-$Flw$ & $\alpha$ & $1-\alpha$\\
-$B$ & $\beta$ & $1-\beta$\\
-$K$ & $\gamma$ & $1-\gamma$\\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\subtitulo{5. CPT de $R$}
-Defina $r_{s,w}=P(R=t\mid Str=s,Flw=w)$; o índice $snow$ abrevia \snow.
-\begin{center}
-\begin{tabular}{lccc}
-\toprule
-$Str$ & $Flw$ & $P(R=t\mid Str,Flw)$ & $P(R=f\mid Str,Flw)$\\
-\midrule
-\texttt{dry} & $f$ & $r_{dry,f}$ & $1-r_{dry,f}$\\
-\texttt{dry} & $t$ & $r_{dry,t}$ & $1-r_{dry,t}$\\
-\texttt{wet} & $f$ & $r_{wet,f}$ & $1-r_{wet,f}$\\
-\texttt{wet} & $t$ & $r_{wet,t}$ & $1-r_{wet,t}$\\
-\snow & $f$ & $r_{snow,f}$ & $1-r_{snow,f}$\\
-\snow & $t$ & $r_{snow,t}$ & $1-r_{snow,t}$\\
-\bottomrule
-\end{tabular}
-\end{center}
-
-\subtitulo{6. CPT de $V$}
-Defina $v_r=P(V=t\mid R=r)$.
-\begin{center}
-\begin{tabular}{ccc}
-\toprule
-$R$ & $P(V=t\mid R)$ & $P(V=f\mid R)$\\
-\midrule
-$f$ & $v_f$ & $1-v_f$\\
-$t$ & $v_t$ & $1-v_t$\\
-\bottomrule
-\end{tabular}
-\end{center}
-Todos os parâmetros das tabelas booleanas pertencem a $[0,1]$. Os valores numéricos das tabelas faltantes serão escolhidos no item (c).
-
-\newpage
-\itemtitle{b}{CPT fornecida e compatibilidade da rede}
-\subtitulo{7. CPT de $Li$}
-Interpretamos a coluna $P(Li)$ da tabela original como $P(Li=t\mid V,B,K)$. Os oito valores abaixo são os do enunciado; apenas acrescentamos a coluna complementar.
+Cada nó precisa de uma distribuição condicionada aos seus pais. Para um nó sem pais, essa tabela é sua distribuição a priori.
 
 \begin{center}
-\begin{tabular}{ccccc}
-\toprule
-$V$ & $B$ & $K$ & $P(Li=t\mid V,B,K)$ & $P(Li=f\mid V,B,K)$\\
-\midrule
-$t$ & $t$ & $t$ & $0{,}99$ & $0{,}01$\\
-$t$ & $t$ & $f$ & $0{,}01$ & $0{,}99$\\
-$t$ & $f$ & $t$ & $0{,}01$ & $0{,}99$\\
-$t$ & $f$ & $f$ & $0{,}001$ & $0{,}999$\\
-$f$ & $t$ & $t$ & $0{,}30$ & $0{,}70$\\
-$f$ & $t$ & $f$ & $0{,}005$ & $0{,}995$\\
-$f$ & $f$ & $t$ & $0{,}005$ & $0{,}995$\\
-$f$ & $f$ & $f$ & $0$ & $1$\\
-\bottomrule
-\end{tabular}
+\begin{tikzpicture}[
+causal/.style={-{Stealth[length=2.5mm]},thick,draw=accent},
+var/.style={draw=accent,rounded corners=3pt,fill=soft,minimum width=23mm,minimum height=9mm},
+every node/.style={align=center}]
+\node[var] (str) at (-2.2,3) {$Str$\\{\scriptsize $P(Str)$}};
+\node[var] (flw) at (2.2,3) {$Flw$\\{\scriptsize $P(Flw)$}};
+\node[var] (r) at (0,1.85) {$R$\\{\scriptsize $P(R\mid Str,Flw)$}};
+\node[var] (v) at (0,0.65) {$V$\\{\scriptsize $P(V\mid R)$}};
+\node[var] (b) at (-3.2,0.65) {$B$\\{\scriptsize $P(B)$}};
+\node[var] (k) at (3.2,0.65) {$K$\\{\scriptsize $P(K)$}};
+\node[var] (li) at (0,-0.65) {$Li$\\{\scriptsize $P(Li\mid V,B,K)$}};
+\draw[causal] (str)--(r);
+\draw[causal] (flw)--(r);
+\draw[causal] (r)--(v);
+\draw[causal] (v)--(li);
+\draw[causal] (b)--(li);
+\draw[causal] (k)--(li);
+\end{tikzpicture}
 \end{center}
 
-Para toda variável booleana $X$, a coluna complementar vem de
+Há \textbf{sete tabelas}. A CPT de \(Li\) já consta do enunciado; faltam as seis distribuições de \(Str\), \(Flw\), \(B\), \(K\), \(R\) e \(V\). Abaixo estão suas formas gerais. As escolhas numéricas são desenvolvidas no \hyperref[item-c]{item (c)}.
+
+\subtitulo{\texorpdfstring{1. Distribuição de \(Str\)}{1. Distribuição de Str}}\label{distribuiuxe7uxe3o-de-str}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lr@{}}
+\toprule\noalign{}
+\(Str\) & Probabilidade \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{dry} & \(p_d\) \\
+\texttt{wet} & \(p_w\) \\
+\texttt{snow\_covered} & \(p_s\) \\
+\end{longtable}
+}
+
+Os parâmetros devem satisfazer \(p_d,p_w,p_s\geq 0\) e \(p_d+p_w+p_s=1\).
+
+\subtitulo{\texorpdfstring{2--4. Distribuições de \(Flw\), \(B\) e \(K\)}{2--4. Distribuições de Flw, B e K}}\label{distribuiuxe7uxf5es-de-flw-b-e-k}
+
+Definimos \(\alpha=P(Flw=t)\), \(\beta=P(B=t)\) e \(\gamma=P(K=t)\).
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lrr@{}}
+\toprule\noalign{}
+Nó & \(P(t)\) & \(P(f)\) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(Flw\) & \(\alpha\) & \(1-\alpha\) \\
+\(B\) & \(\beta\) & \(1-\beta\) \\
+\(K\) & \(\gamma\) & \(1-\gamma\) \\
+\end{longtable}
+}
+
+Cada parâmetro pertence ao intervalo \([0,1]\).
+
+\clearpage
+\subtitulo{\texorpdfstring{5. CPT de \(R\)}{5. CPT de R}}\label{cpt-de-r}
+
+Definimos \(r_{s,w}=P(R=t\mid Str=s,Flw=w)\).
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}llrr@{}}
+\toprule\noalign{}
+\(Str\) & \(Flw\) & \(P(R=t\mid Str,Flw)\) & \(P(R=f\mid Str,Flw)\) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{dry} & \(f\) & \(r_{dry,f}\) & \(1-r_{dry,f}\) \\
+\texttt{dry} & \(t\) & \(r_{dry,t}\) & \(1-r_{dry,t}\) \\
+\texttt{wet} & \(f\) & \(r_{wet,f}\) & \(1-r_{wet,f}\) \\
+\texttt{wet} & \(t\) & \(r_{wet,t}\) & \(1-r_{wet,t}\) \\
+\texttt{snow\_covered} & \(f\) & \(r_{snow,f}\) & \(1-r_{snow,f}\) \\
+\texttt{snow\_covered} & \(t\) & \(r_{snow,t}\) & \(1-r_{snow,t}\) \\
+\end{longtable}
+}
+
+O índice \(snow\) abrevia o valor \texttt{snow\_covered}. São \(3\times2=6\) combinações dos pais e seis parâmetros livres, todos em \([0,1]\).
+
+\subtitulo{\texorpdfstring{6. CPT de \(V\)}{6. CPT de V}}\label{cpt-de-v}
+
+Definimos \(v_r=P(V=t\mid R=r)\).
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lrr@{}}
+\toprule\noalign{}
+\(R\) & \(P(V=t\mid R)\) & \(P(V=f\mid R)\) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(f\) & \(v_f\) & \(1-v_f\) \\
+\(t\) & \(v_t\) & \(1-v_t\) \\
+\end{longtable}
+}
+
+São duas combinações do único pai e dois parâmetros livres em \([0,1]\).
+
+\subtitulo{\texorpdfstring{7. CPT de \(Li\) fornecida no enunciado}{7. CPT de Li fornecida no enunciado}}\label{cpt-de-li-fornecida-no-enunciado}
+
+Interpretamos a coluna \(P(Li)\) da tabela original como \(P(Li=t\mid V,B,K)\). Preservamos os oito valores fornecidos e acrescentamos os complementos para \(Li=f\).
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lllrr@{}}
+\toprule\noalign{}
+\(V\) & \(B\) & \(K\) & \(P(Li=t\mid V,B,K)\) & \(P(Li=f\mid V,B,K)\) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(t\) & \(t\) & \(t\) & \(0{,}99\) & \(0{,}01\) \\
+\(t\) & \(t\) & \(f\) & \(0{,}01\) & \(0{,}99\) \\
+\(t\) & \(f\) & \(t\) & \(0{,}01\) & \(0{,}99\) \\
+\(t\) & \(f\) & \(f\) & \(0{,}001\) & \(0{,}999\) \\
+\(f\) & \(t\) & \(t\) & \(0{,}30\) & \(0{,}70\) \\
+\(f\) & \(t\) & \(f\) & \(0{,}005\) & \(0{,}995\) \\
+\(f\) & \(f\) & \(t\) & \(0{,}005\) & \(0{,}995\) \\
+\(f\) & \(f\) & \(f\) & \(0\) & \(1\) \\
+\end{longtable}
+}
+
+São \(2^3=8\) combinações dos pais. Para qualquer variável booleana \(X\), o complemento decorre de
+
 \[
 P(X=f\mid\text{pais})=1-P(X=t\mid\text{pais}).
 \]
-Há seis combinações de pais para $R$, duas para $V$ e oito para $Li$. A estrutura possui $2+1+1+1+6+2+8=21$ parâmetros livres, dos quais oito já estão fixados pela tabela de $Li$.
 
-\subtitulo{Compatibilidade com as independências fornecidas}
-Pela fatoração, $P(Str,Flw,B,K)=P(Str)P(Flw)P(B)P(K)$, o que satisfaz todas as independências aos pares dessas origens. Escrevendo $s,w,r,v,b,k,\ell$ para os estados das respectivas variáveis,
-\[
-P(R=r,B=b)=P(B=b)\sum_{s,w}P(s)P(w)P(r\mid s,w)=P(B=b)P(R=r).
-\]
-O mesmo raciocínio prova $R\perp K$. Acrescentando a soma sobre $R$ e o fator $P(v\mid r)$, obtemos $V\perp B$ e $V\perp K$.
+\textbf{Resposta:} as sete tabelas ficam associadas aos nós como no diagrama; suas linhas somam 1. O total de parâmetros livres da estrutura é \(2+1+1+1+6+2+8=21\), dos quais oito já foram fixados pela CPT de \(Li\) do enunciado.
 
-Para a independência condicional da luz,
-\[
-\begin{aligned}
-P(\ell\mid v,r)
-&=\sum_{b,k}P(\ell\mid v,b,k)P(B=b)P(K=k)\\
-&=P(\ell\mid v).
-\end{aligned}
-\]
-Finalmente, a CPT de $V$ depende apenas de $R$. Assim,
-\[
-\begin{aligned}
-P(v\mid r,s)
-&=\sum_w P(v\mid r,s,w)P(w\mid r,s)\\
-&=P(v\mid r)\sum_w P(w\mid r,s)=P(v\mid r).
-\end{aligned}
-\]
-Analogamente, $P(v\mid r,w)=P(v\mid r)$. Não se supõe que o desgaste continue independente da rua ao observar $R$: a soma das probabilidades condicionais de seus estados é que vale 1.
+\clearpage
+\itemtitle{c}{Valores plausíveis}\label{item-c}
 
-\newpage
-\itemtitle{c}{Escolha de probabilidades plausíveis}
-\textbf{Pedido:} atribuir livremente valores plausíveis às probabilidades faltantes.
+A rede adotada é \(Str\to R\leftarrow Flw\), \(R\to V\), \(V\to Li\), \(B\to Li\) e \(K\to Li\), com os nós de origem conjuntamente independentes. A CPT de \(Li\) é preservada.
 
-Os números seguintes são \textbf{hipóteses ilustrativas}, não dados medidos. A CPT de $Li$ permanece exatamente como no item (b), inclusive as probabilidades não nulas quando $V=f$.
+\subtitulo{Distribuições a priori}\label{distribuiuxe7uxf5es-a-priori}
 
-\subtitulo{Distribuições a priori}
-\begin{center}
-\begin{tabular}{lc}
-\toprule
-$Str$ & $P(Str)$\\
-\midrule
-\texttt{dry} & $0{,}60$\\
-\texttt{wet} & $0{,}30$\\
-\snow & $0{,}10$\\
-\bottomrule
-\end{tabular}
-\qquad
-\begin{tabular}{lcc}
-\toprule
-\textbf{Nó} & $P(t)$ & $P(f)$\\
-\midrule
-$Flw$ & $0{,}20$ & $0{,}80$\\
-$B$ & $0{,}95$ & $0{,}05$\\
-$K$ & $0{,}98$ & $0{,}02$\\
-\bottomrule
-\end{tabular}
-\end{center}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lr@{}}
+\toprule\noalign{}
+\(Str\) & \(P(Str)\) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{dry} & \(0{,}60\) \\
+\texttt{wet} & \(0{,}30\) \\
+\texttt{snow\_covered} & \(0{,}10\) \\
+\end{longtable}
+}
 
-Ruas secas são mais frequentes que ruas molhadas e com neve nesse cenário hipotético, sem representar o clima de uma cidade específica. Há 20\% de chance de desgaste, 95\% de a lâmpada estar em boas condições e 98\% de o cabo estar em boas condições.
-
-\subtitulo{CPT de $R$}
-\begin{center}
-\begin{tabular}{lccc}
-\toprule
-$Str$ & $Flw$ & $P(R=t\mid Str,Flw)$ & $P(R=f\mid Str,Flw)$\\
-\midrule
-\texttt{dry} & $f$ & $0{,}02$ & $0{,}98$\\
-\texttt{dry} & $t$ & $0{,}10$ & $0{,}90$\\
-\texttt{wet} & $f$ & $0{,}20$ & $0{,}80$\\
-\texttt{wet} & $t$ & $0{,}50$ & $0{,}50$\\
-\snow & $f$ & $0{,}60$ & $0{,}40$\\
-\snow & $t$ & $0{,}90$ & $0{,}10$\\
-\bottomrule
-\end{tabular}
-\end{center}
-
-Para um volante sem desgaste, o risco de deslizamento cresce de $0{,}02$ para $0{,}20$ e $0{,}60$ ao passar de rua seca para molhada e com neve. Com desgaste, cresce de $0{,}10$ para $0{,}50$ e $0{,}90$. O desgaste aumenta o risco em todas as condições de rua.
-
-\subtitulo{CPT de $V$}
-\begin{center}
-\begin{tabular}{ccc}
-\toprule
-$R$ & $P(V=t\mid R)$ & $P(V=f\mid R)$\\
-\midrule
-$f$ & $0{,}98$ & $0{,}02$\\
-$t$ & $0{,}10$ & $0{,}90$\\
-\bottomrule
-\end{tabular}
-\end{center}
-O deslizamento reduz a chance de gerar tensão de 98\% para 10\%. A chance não é zero porque pode haver contato residual ou deslizamento parcial.
-
-\subtitulo{Verificação de normalização}
-As probabilidades são não negativas e não excedem 1. A priori,
 \[
 0{,}60+0{,}30+0{,}10=1.
 \]
-As linhas booleanas somam 1 por construção. Por exemplo,
+
+Escolhi um cenário em que ruas secas são mais frequentes que ruas molhadas e ruas com neve.
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lrr@{}}
+\toprule\noalign{}
+Nó & \(P(t)\) & \(P(f)\) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(Flw\) & \(0{,}20\) & \(0{,}80\) \\
+\(B\) & \(0{,}95\) & \(0{,}05\) \\
+\(K\) & \(0{,}98\) & \(0{,}02\) \\
+\end{longtable}
+}
+
+Assim, há 20\% de probabilidade de desgaste do volante, 95\% de a lâmpada estar em boas condições e 98\% de o cabo estar em boas condições.
+
+\subtitulo{\texorpdfstring{CPT de \(R\)}{CPT de R}}\label{cpt-de-r-1}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}llrr@{}}
+\toprule\noalign{}
+\(Str\) & \(Flw\) & \(P(R=t\mid Str,Flw)\) & \(P(R=f\mid Str,Flw)\) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{dry} & \(f\) & \(0{,}02\) & \(0{,}98\) \\
+\texttt{dry} & \(t\) & \(0{,}10\) & \(0{,}90\) \\
+\texttt{wet} & \(f\) & \(0{,}20\) & \(0{,}80\) \\
+\texttt{wet} & \(t\) & \(0{,}50\) & \(0{,}50\) \\
+\texttt{snow\_covered} & \(f\) & \(0{,}60\) & \(0{,}40\) \\
+\texttt{snow\_covered} & \(t\) & \(0{,}90\) & \(0{,}10\) \\
+\end{longtable}
+}
+
+Para um volante sem desgaste, o risco de deslizamento aumenta de \(0{,}02\) para \(0{,}20\) e depois para \(0{,}60\) ao passar de rua seca para molhada e com neve. Para um volante desgastado, aumenta de \(0{,}10\) para \(0{,}50\) e depois para \(0{,}90\). Em cada condição de rua, o desgaste aumenta a probabilidade de deslizamento.
+
+\subtitulo{\texorpdfstring{CPT de \(V\)}{CPT de V}}\label{cpt-de-v-1}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lrr@{}}
+\toprule\noalign{}
+\(R\) & \(P(V=t\mid R)\) & \(P(V=f\mid R)\) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(f\) & \(0{,}98\) & \(0{,}02\) \\
+\(t\) & \(0{,}10\) & \(0{,}90\) \\
+\end{longtable}
+}
+
+Sem deslizamento, o dínamo apresenta tensão com probabilidade de 98\%. Com deslizamento, essa probabilidade cai para 10\%. Não a fixei em zero porque pode haver contato residual ou deslizamento parcial.
+
+\clearpage
+\subtitulo{\texorpdfstring{CPT de \(Li\): valores do enunciado}{CPT de Li: valores do enunciado}}\label{cpt-de-li-valores-do-enunciado}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lllrr@{}}
+\toprule\noalign{}
+\(V\) & \(B\) & \(K\) & \(P(Li=t\mid V,B,K)\) & \(P(Li=f\mid V,B,K)\) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(t\) & \(t\) & \(t\) & \(0{,}99\) & \(0{,}01\) \\
+\(t\) & \(t\) & \(f\) & \(0{,}01\) & \(0{,}99\) \\
+\(t\) & \(f\) & \(t\) & \(0{,}01\) & \(0{,}99\) \\
+\(t\) & \(f\) & \(f\) & \(0{,}001\) & \(0{,}999\) \\
+\(f\) & \(t\) & \(t\) & \(0{,}30\) & \(0{,}70\) \\
+\(f\) & \(t\) & \(f\) & \(0{,}005\) & \(0{,}995\) \\
+\(f\) & \(f\) & \(t\) & \(0{,}005\) & \(0{,}995\) \\
+\(f\) & \(f\) & \(f\) & \(0\) & \(1\) \\
+\end{longtable}
+}
+
+Os valores não nulos com \(V=f\) pertencem à tabela fornecida e não foram substituídos por um modelo determinístico de circuito.
+
+\subtitulo{Normalização e coerência}\label{normalizauxe7uxe3o-e-coeruxeancia}
+
+Todas as probabilidades estão no intervalo \([0,1]\). Em cada linha booleana, a probabilidade de \(f\) é o complemento da probabilidade de \(t\); por exemplo,
+
 \[
-\begin{aligned}
-P(R=f\mid Str=\snow,Flw=t)&=1-0{,}90=0{,}10,\\
-P(Li=f\mid V=t,B=f,K=f)&=1-0{,}001=0{,}999.
-\end{aligned}
+P(R=f\mid Str=\text{snow\_covered},Flw=t)=1-0{,}90=0{,}10,
 \]
-Portanto, as seis tabelas faltantes ficam numericamente completas, e a sétima é a fornecida no enunciado. Esses valores respeitam a fatoração e serão usados no item (e).
 
-\newpage
-\itemtitle{d}{Ausência de aresta entre $Str$ e $Li$}
-\textbf{Pedido:} mostrar que a rede não contém uma aresta entre a condição da rua e a luz ligada.
+\[
+P(Li=f\mid V=t,B=f,K=f)=1-0{,}001=0{,}999.
+\]
 
-\subtitulo{1. Efeito indireto}
-Na estrutura adotada, a rua altera a probabilidade de deslizamento, que altera a geração de tensão, que influencia a luz. O caminho causal é
+A independência conjunta das origens garante que as probabilidades de \(B\) e \(K\) não dependam de \(R\) ou de \(V\). As CPTs de \(V\) e de \(Li\) também respeitam as independências condicionais indicadas: \(V\) depende apenas de \(R\), e o efeito de \(R\) sobre \(Li\) passa por \(V\).
+
+\textbf{Resposta:} as seis distribuições faltantes ficam numericamente especificadas, e a sétima permanece igual à do enunciado. São esses valores que serão usados no \hyperref[item-e]{item (e)}.
+
+\clearpage
+\itemtitle{d}{\texorpdfstring{ausência de aresta entre \texttt{Str} e \texttt{Li}}{ausência de aresta entre Str e Li}}\label{item-d}
+
+Na rede adotada, a condição da rua altera a probabilidade de deslizamento, que altera a geração de tensão, que influencia a luz:
+
 \[
 Str\longrightarrow R\longrightarrow V\longrightarrow Li.
 \]
-Os pais de $Li$ são $V$, $B$ e $K$, conforme a CPT fornecida. Assim, $Str$ influencia $Li$ indiretamente, mas não é um de seus pais.
 
-\subtitulo{2. D-separação}
-O único caminho entre $Str$ e $Li$ passa por $R$ e $V$. Ao condicionar em $V$, um nó não colisor nesse caminho, bloqueamos o caminho. Portanto,
-\[
-\boxed{Str\perp Li\mid V.}
-\]
-Com a lâmpada e o cabo também conhecidos, vale
-\[
-\boxed{P(Li\mid Str,V,B,K)=P(Li\mid V,B,K).}
-\]
-Conhecidos os pais da luz, informar a condição da rua não altera sua probabilidade. A igualdade $P(Li\mid V,R)=P(Li\mid V)$ dada no enunciado é compatível com a mesma mediação: observar o deslizamento não acrescenta informação sobre a luz quando a tensão é conhecida.
+Portanto, há um efeito \textbf{indireto}. Os pais de \(Li\) são exatamente \(V\), \(B\) e \(K\), como também indica a CPT fornecida no enunciado. A rua não é um pai da luz.
 
-\subtitulo{3. Verificação pela fatoração}
-Fixe $Str=s$, $V=v$, $B=b$ e $K=k$. Na distribuição conjunta, o único fator que envolve $Li$ é $P(Li\mid v,b,k)$. Ao somar os estados não observados de $Flw$ e $R$ e normalizar, esse fator sai da soma:
+\subtitulo{Justificativa por d-separação}\label{justificativa-por-d-separauxe7uxe3o}
+
+O único caminho entre \(Str\) e \(Li\) passa por \(R\) e \(V\). Ao condicionar em \(V\), um nó não colisor nesse caminho, bloqueamos o caminho. Pela propriedade de d-separação da rede,
+
+\[
+Str\perp Li\mid V.
+\]
+
+Mesmo quando a lâmpada e o cabo também são conhecidos,
+
+\[
+P(Li\mid Str,V,B,K)=P(Li\mid V,B,K).
+\]
+
+Conhecidos os pais da luz, informar a condição da rua não muda sua probabilidade. A condição \(P(Li\mid V,R)=P(Li\mid V)\) do enunciado também é compatível com essa mediação: ao conhecer a tensão, saber se o dínamo desliza não acrescenta informação sobre a luz.
+
+\subtitulo{Verificação pela fatoração}\label{verificauxe7uxe3o-pela-fatorauxe7uxe3o}
+
+Escreva \(s\), \(v\), \(b\) e \(k\) para valores fixados de \(Str\), \(V\), \(B\) e \(K\). Na fatoração da rede, o único fator que envolve \(Li\) é \(P(Li\mid v,b,k)\). Ao somar os estados não observados de \(Flw\) e \(R\) e normalizar, esse fator pode sair da soma, resultando em
+
 \[
 P(Li\mid s,v,b,k)=P(Li\mid v,b,k).
 \]
-Se $B$ e $K$ não forem observados, a independência conjunta das origens permite marginalizar:
+
+Se \(B\) e \(K\) não forem observados, a independência conjunta das origens permite marginalizar:
+
 \[
-\begin{aligned}
 P(Li\mid V=v,Str=s)
-={}&\sum_{b\in\{t,f\}}\sum_{k\in\{t,f\}}
-P(Li\mid v,b,k)P(B=b)P(K=k)\\
-={}&P(Li\mid V=v).
-\end{aligned}
+=\sum_{b\in\{t,f\}}\sum_{k\in\{t,f\}}
+P(Li\mid v,b,k)P(B=b)P(K=k).
 \]
-A expressão não depende da condição da rua $s$.
 
-\subtitulo{Conclusão}
-Toda influência da rua sobre a luz é transmitida por $R$ e $V$. Logo, a rede causal adotada \textbf{não contém uma aresta direta $Str\to Li$}. Também não há $Li\to Str$, pois o estado da luz não causa a condição da rua.
+O lado direito não depende de \(s\) e é igual a \(P(Li\mid V=v)\).
 
-A ausência da aresta \textbf{não significa independência marginal}: sem observar $V$, o caminho indireto permanece ativo. Esta conclusão se refere ao modelo causal escolhido. As independências fornecidas, isoladamente, não demonstram que ele seja a única estrutura possível.
+\subtitulo{Conclusão}\label{conclusuxe3o}
 
-\newpage
-\itemtitle{e}{Tensão com a rua coberta de neve}
-\textbf{Pedido:} calcular $P(V\mid Str=\snow)$.
+Na estrutura causal escolhida, toda influência da rua sobre a luz é transmitida por \(R\) e \(V\). Assim, \textbf{não há aresta direta \(Str\to Li\)}. Também não há aresta inversa \(Li\to Str\), pois o estado da luz não causa a condição da rua.
 
-Como $V$ é booleana, calculamos a chance de $V=t$ e sua complementar para $V=f$. Abreviamos a evidência $Str=\snow$ por $S$.
+A ausência da aresta não significa que \(Str\) e \(Li\) sejam independentes sem condicionamento: o caminho indireto continua ativo quando \(V\) não é observado. A conclusão refere-se à rede causal adotada; as independências fornecidas, isoladamente, não demonstram que ela seja a única estrutura possível.
 
-\subtitulo{Dados utilizados}
-Do item (c),
+\clearpage
+\itemtitle{e}{Tensão com a rua coberta de neve}\label{item-e}
+
+Como \(V\) é booleana, vamos calcular a probabilidade de \(V=t\) e sua complementar para \(V=f\). Abreviamos a evidência \(Str=\text{snow\_covered}\) por \(S\).
+
+Usando as probabilidades escolhidas no \hyperref[item-c]{item (c)}:
+
 \[
-\begin{aligned}
-P(Flw=t)&=0{,}20, & P(Flw=f)&=0{,}80,\\
-P(R=t\mid S,Flw=t)&=0{,}90, & P(R=t\mid S,Flw=f)&=0{,}60,\\
-P(V=t\mid R=t)&=0{,}10, & P(V=t\mid R=f)&=0{,}98.
-\end{aligned}
+P(Flw=t)=0{,}20,\qquad P(Flw=f)=0{,}80,
 \]
-Pela independência entre $Str$ e $Flw$, observar neve não altera a chance de desgaste:
+
+\[
+P(R=t\mid S,Flw=t)=0{,}90,\qquad
+P(R=t\mid S,Flw=f)=0{,}60,
+\]
+
+\[
+P(V=t\mid R=t)=0{,}10,\qquad
+P(V=t\mid R=f)=0{,}98.
+\]
+
+Pela independência entre \(Str\) e \(Flw\), observar neve não altera a probabilidade de desgaste:
+
 \[
 P(Flw=t\mid S)=0{,}20,\qquad P(Flw=f\mid S)=0{,}80.
 \]
 
-\subtitulo{1. Marginalizar o desgaste}
-Pela lei da probabilidade total, somamos os dois estados de $Flw$:
+\subtitulo{1. Marginalizar o desgaste para obter o deslizamento}\label{marginalizar-o-desgaste-para-obter-o-deslizamento}
+
+Pela lei da probabilidade total, somamos os dois estados de \(Flw\):
+
 \[
 \begin{aligned}
 P(R=t\mid S)
@@ -366,17 +484,23 @@ P(R=t\mid S)
 ={}&0{,}66.
 \end{aligned}
 \]
+
 Consequentemente,
+
 \[
-\boxed{P(R=f\mid S)=1-0{,}66=0{,}34.}
+P(R=f\mid S)=1-0{,}66=0{,}34.
 \]
 
-\subtitulo{2. Marginalizar o deslizamento}
-Aplicando novamente a lei da probabilidade total,
+\subtitulo{2. Marginalizar o deslizamento para obter a tensão}\label{marginalizar-o-deslizamento-para-obter-a-tensuxe3o}
+
+Novamente pela lei da probabilidade total,
+
 \[
 P(V=t\mid S)=\sum_{r\in\{t,f\}}P(V=t\mid R=r,S)P(R=r\mid S).
 \]
-O enunciado dá $P(V\mid R,Str)=P(V\mid R)$; portanto, conhecido $R$, retiramos a condição sobre a rua do primeiro fator:
+
+O enunciado fornece \(P(V\mid R,Str)=P(V\mid R)\). Portanto, conhecido \(R\), podemos retirar a condição sobre a rua do primeiro fator:
+
 \[
 \begin{aligned}
 P(V=t\mid S)
@@ -384,66 +508,65 @@ P(V=t\mid S)
 &+P(V=t\mid R=f)P(R=f\mid S)\\
 ={}&0{,}10\cdot0{,}66+0{,}98\cdot0{,}34\\
 ={}&0{,}066+0{,}3332\\
-={}&\boxed{0{,}3992=39{,}92\%.}
+={}&\boxed{0{,}3992=39{,}92\%}.
 \end{aligned}
 \]
 
-\newpage
-\itemtitle{e}{Conferência e distribuição final}
-\subtitulo{3. Conferência pelos quatro caminhos}
-A soma pode ser aberta nas quatro combinações de desgaste e deslizamento. Na rede adotada,
-\[
-P(V=t\mid S)=\sum_{w\in\{t,f\}}\sum_{r\in\{t,f\}}
-P(Flw=w\mid S)P(R=r\mid S,Flw=w)P(V=t\mid R=r).
-\]
+\clearpage
+\subtitulo{3. Conferência pelos quatro caminhos}\label{conferuxeancia-pelos-quatro-caminhos}
 
-\begin{center}
-\begin{tabular}{ccl}
-\toprule
-$Flw$ & $R$ & \textbf{Contribuição para $P(V=t\mid S)$}\\
-\midrule
-$t$ & $t$ & $0{,}20\cdot0{,}90\cdot0{,}10=0{,}018$\\
-$t$ & $f$ & $0{,}20\cdot0{,}10\cdot0{,}98=0{,}0196$\\
-$f$ & $t$ & $0{,}80\cdot0{,}60\cdot0{,}10=0{,}048$\\
-$f$ & $f$ & $0{,}80\cdot0{,}40\cdot0{,}98=0{,}3136$\\
-\bottomrule
-\end{tabular}
-\end{center}
+A mesma soma pode ser aberta nas quatro combinações de desgaste e deslizamento:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}llr@{}}
+\toprule\noalign{}
+\(Flw\) & \(R\) & \(P(Flw\mid S)P(R\mid S,Flw)P(V=t\mid R)\) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(t\) & \(t\) & \(0{,}20\cdot0{,}90\cdot0{,}10=0{,}018\) \\
+\(t\) & \(f\) & \(0{,}20\cdot0{,}10\cdot0{,}98=0{,}0196\) \\
+\(f\) & \(t\) & \(0{,}80\cdot0{,}60\cdot0{,}10=0{,}048\) \\
+\(f\) & \(f\) & \(0{,}80\cdot0{,}40\cdot0{,}98=0{,}3136\) \\
+\end{longtable}
+}
 
 Logo,
+
 \[
 0{,}018+0{,}0196+0{,}048+0{,}3136=0{,}3992.
 \]
-Esse desenvolvimento confirma a mesma resposta sem ocultar as combinações de estados marginalizadas.
 
-\subtitulo{4. Probabilidade complementar}
-Para o estado $V=f$,
+Essa abertura usa a CPT \(P(V\mid R)\) da rede adotada.
+
+\subtitulo{4. Distribuição final}\label{distribuiuxe7uxe3o-final}
+
 \[
-\boxed{P(V=f\mid S)=1-0{,}3992=0{,}6008=60{,}08\%.}
+P(V=f\mid S)=1-0{,}3992=\boxed{0{,}6008=60{,}08\%}.
 \]
-A distribuição pedida fica
-\begin{center}
-\begin{tabular}{lcc}
-\toprule
-\textbf{Estado de $V$} & $P(V\mid Str=\snow)$ & \textbf{Percentual}\\
-\midrule
-$t$: apresenta tensão & $0{,}3992$ & $39{,}92\%$\\
-$f$: não apresenta tensão & $0{,}6008$ & $60{,}08\%$\\
-\bottomrule
-\end{tabular}
-\end{center}
-As probabilidades somam $0{,}3992+0{,}6008=1$.
 
-\subtitulo{Por que as outras tabelas não entram na conta?}
-A priori, $P(Str=\snow)=0{,}10$, mas não multiplicamos a resposta por esse número: a neve já foi observada e estamos calculando uma probabilidade \emph{condicional}, não a probabilidade conjunta $P(V=t,Str=\snow)$.
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lr@{}}
+\toprule\noalign{}
+Estado de \(V\) & \(P(V\mid Str=\text{snow\_covered})\) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\(t\) --- apresenta tensão & \(0{,}3992\) (\(39{,}92\%\)) \\
+\(f\) --- não apresenta tensão & \(0{,}6008\) (\(60{,}08\%\)) \\
+\end{longtable}
+}
 
-As tabelas de $B$, $K$ e $Li$ somam 1 ao serem marginalizadas e não há evidência nesses nós. Por isso, a consulta depende apenas das probabilidades de $Flw$, $R$ e $V$.
+As probabilidades somam \(0{,}3992+0{,}6008=1\). A probabilidade a priori de neve, \(P(Str=\text{snow\_covered})=0{,}10\), não multiplica a resposta, pois a rua coberta de neve já é uma condição conhecida. As tabelas de \(B\), \(K\) e \(Li\) também não entram: elas somam 1 ao serem marginalizadas, e não há evidência observada nesses nós.
 
-\textbf{Resposta final.} Com as probabilidades escolhidas no item (c), o dínamo apresenta tensão em uma rua coberta de neve com probabilidade de \textbf{39,92\%}. O resultado numérico depende dessas escolhas livres; outras CPTs plausíveis podem produzir outro valor.
+\textbf{Resposta:} com as probabilidades adotadas, o dínamo apresenta tensão em uma rua coberta de neve com probabilidade de \textbf{39,92\%}. O resultado numérico depende das escolhas livres do item (c).
 
-\vfill
-\small
+
+\bigskip
+{\small
 \textcolor{accent}{\textbf{Fonte do exercício}}\par
 \textit{IA-Atividade\_Metodologias\_Ativas-RaciocinioProb.pdf}, questão 1. Universidade Federal do Amazonas, Instituto de Computação. Disciplina Inteligência Artificial, 2\textsuperscript{o} Trabalho, professor Edjard Mota, 11/10/2026.
-
+}
 \end{document}

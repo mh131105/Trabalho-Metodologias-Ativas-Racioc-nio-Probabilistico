@@ -1,7 +1,5 @@
 # Questão 1 — Item (a): rede bayesiana causal
 
-**Pedido:** desenhar a rede de causalidade entre `Str`, `Flw`, `R`, `V`, `B`, `K` e `Li`.
-
 ## Variáveis
 
 | Variável | Significado | Valores |
