@@ -1,7 +1,5 @@
 # Questão 1 — Item (e): tensão com a rua coberta de neve
 
-**Pedido:** calcular $P(V\mid Str=snow\_covered)$.
-
 Como $V$ é booleana, vamos calcular a probabilidade de $V=t$ e sua complementar para $V=f$. Abreviamos a evidência $Str=snow\_covered$ por $S$.
 
 ## Dados utilizados
