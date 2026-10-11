@@ -14,7 +14,7 @@ $$
 0{,}60+0{,}30+0{,}10=1.
 $$
 
-Escolhemos um cenário em que ruas secas são mais frequentes que ruas molhadas e ruas com neve. Essas frequências são hipotéticas e não descrevem o clima de uma cidade específica.
+Escolhi um cenário em que ruas secas são mais frequentes que ruas molhadas e ruas com neve.
 
 | Nó | $P(t)$ | $P(f)$ |
 |---|---:|---:|
@@ -44,7 +44,7 @@ Para um volante sem desgaste, o risco de deslizamento aumenta de $0{,}02$ para $
 | $f$ | $0{,}98$ | $0{,}02$ |
 | $t$ | $0{,}10$ | $0{,}90$ |
 
-Sem deslizamento, o dínamo apresenta tensão com probabilidade de 98%. Com deslizamento, essa probabilidade cai para 10%. Não a fixamos em zero porque pode haver contato residual ou deslizamento parcial.
+Sem deslizamento, o dínamo apresenta tensão com probabilidade de 98%. Com deslizamento, essa probabilidade cai para 10%. Não a fixei em zero porque pode haver contato residual ou deslizamento parcial.
 
 ## CPT de $Li$: valores do enunciado
 
