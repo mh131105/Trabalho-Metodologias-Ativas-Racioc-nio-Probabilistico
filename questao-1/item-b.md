@@ -1,9 +1,5 @@
 # Questão 1 — Item (b): tabelas de probabilidades
 
-**Pedido:** identificar todas as tabelas de probabilidades condicionais (CPTs) da rede e preencher as que faltam.
-
-## Distribuição associada a cada nó
-
 Cada nó precisa de uma distribuição condicionada aos seus pais. Para um nó sem pais, essa tabela é sua distribuição a priori.
 
 ```mermaid
