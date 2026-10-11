@@ -1,9 +1,5 @@
 # Questão 1 — Item (d): ausência de aresta entre `Str` e `Li`
 
-**Pedido:** mostrar que a rede não contém uma aresta entre a condição da rua e a luz ligada.
-
-## Caminho causal existente
-
 Na rede adotada, a condição da rua altera a probabilidade de deslizamento, que altera a geração de tensão, que influencia a luz:
 
 $$
