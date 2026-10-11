@@ -47,7 +47,7 @@ As condições $P(V\mid R,Str)=P(V\mid R)$ e $P(V\mid R,Flw)=P(V\mid R)$ são co
 
 ## Hipótese de modelagem e fatoração
 
-Adotamos a interpretação causal descrita e a hipótese usual de **independência conjunta** dos nós de origem $Str$, $Flw$, $B$ e $K$. Essa hipótese é compatível com a independência aos pares do enunciado, mas é mais forte: independência aos pares, sozinha, não implica independência conjunta nem determina uma única rede.
+Adotei a interpretação causal descrita e a hipótese usual de **independência conjunta** dos nós de origem $Str$, $Flw$, $B$ e $K$. Essa hipótese é compatível com a independência aos pares do enunciado, mas é mais forte: independência aos pares, sozinha, não implica independência conjunta nem determina uma única rede.
 
 A distribuição conjunta da rede escolhida se decompõe em
 
