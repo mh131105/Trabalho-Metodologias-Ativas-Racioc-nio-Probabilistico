@@ -1,6 +1,6 @@
 # Questão 1 — Item (c): valores plausíveis
 
-A rede adotada é $Str\to R\leftarrow Flw$, $R\to V$, $V\to Li$, $B\to Li$ e $K\to Li$, com os nós de origem conjuntamente independentes. A CPT de $Li$ é preservada conforme o enunciado.
+A rede adotada é $Str\to R\leftarrow Flw$, $R\to V$, $V\to Li$, $B\to Li$ e $K\to Li$, com os nós de origem conjuntamente independentes. A CPT de $Li$ é preservada.
 
 ## Distribuições a priori
 
