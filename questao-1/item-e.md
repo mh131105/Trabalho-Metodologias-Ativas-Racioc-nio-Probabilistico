@@ -2,9 +2,7 @@
 
 Como $`V`$ é booleana, vamos calcular a probabilidade de $`V=t`$ e sua complementar para $`V=f`$. Abreviamos a evidência $`Str=\text{snow\_covered}`$ por $`S`$.
 
-## Dados utilizados
-
-Usamos as probabilidades escolhidas no [item (c)](item-c.md):
+Usando as probabilidades escolhidas no [item (c)](item-c.md):
 
 ```math
 P(Flw=t)=0{,}20,\qquad P(Flw=f)=0{,}80,
