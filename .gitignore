@@ -1,0 +1,7 @@
+# Arquivos temporários de compilação e inspeção
+tmp/
+*.aux
+*.log
+*.out
+*.synctex.gz
+.DS_Store
